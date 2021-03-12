@@ -2,6 +2,7 @@ package com.example.cs441program4;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,13 +28,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        data.addItem("Horse");
-        data.addItem("Cow");
-        data.addItem("Camel");
-        data.addItem("Sheep");
-        data.addItem("Goat");
-
         recyclerView = findViewById(R.id.rview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -41,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
+        ItemTouchHelper.Callback callback = new ItemMoveCallback(adapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(recyclerView);
     }
 
     @Override
@@ -75,11 +72,13 @@ public class MainActivity extends AppCompatActivity {
         int size = data.getItems().size();
         for(int i = 0; i<size; i++){
             View row = recyclerView.getLayoutManager().findViewByPosition(i);
-            FloatingActionButton button = row.findViewById(R.id.floatingActionButton3);
-            if(removing == true){
-                button.setVisibility(View.VISIBLE);
-            } else{
-                button.setVisibility(View.INVISIBLE);
+            if(row != null){
+                FloatingActionButton button = row.findViewById(R.id.floatingActionButton3);
+                if(removing == true){
+                    button.setVisibility(View.VISIBLE);
+                } else{
+                    button.setVisibility(View.INVISIBLE);
+                }
             }
         }
     }
